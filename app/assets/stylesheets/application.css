@@ -16,27 +16,40 @@
 
  */
 
-.main-content {
-  margin-left: 70px;
-  margin-top: 10px;
+.logo {
+  padding-right: 15px;
 }
 
-.main-header {
-  padding-left: 5px;
+.topbar-center {
+ padding: 35px 15px;
 }
 
-.query-container {
+.body {
+  margin-left: 100px;
+  margin-top: 20px;
+  margin-right: 100px;
   background-color: #EEEEEE;
+  padding: 20px 35px;
+}
+
+.tutor-list {
+  max-height: 400px;
+  overflow: scroll;
+}
+
+.sorting-buttons {
+  padding-left: 8px;
+}
+
+.data-container {
+
 }
 
 .query-params-list {
-  margin: 20px;
+  margin-right: 20px;
+  height: 100%;
   border: 0px;
   border-right: 1px;
-  border-color: gray;
+  border-color: #BBBBBB;
   border-style: solid;
-}
-
-.long-switch {
-  width: 100px;
 }

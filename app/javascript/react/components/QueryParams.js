@@ -5,7 +5,7 @@ const QueryParams = (props) => {
   return(
     <div className="grid-x query-params-list">
       <div className="row small-12">
-        <input type="radio" name="pokemon" value="Both" id="pokemonRed" required /><label htmlFor="pokemonRed">Both</label>
+        <input type="radio" name="pokemon" value="Both" id="pokemonRed" required /><label htmlFor="pokemonRed">Combined</label>
         <input type="radio" name="pokemon" value="Separate" id="pokemonBlue" /><label htmlFor="pokemonBlue">Separate</label>
         <input type="radio" name="pokemon" value="SAT" id="pokemonYellow" /><label htmlFor="pokemonYellow">SAT</label>
         <input type="radio" name="pokemon" value="ACT" id="pokemonYellow" /><label htmlFor="pokemonYellow">ACT</label>

@@ -38,8 +38,8 @@ class QueryPage extends Component {
   render() {
     return(
       <div>
-        <h1 className="main-header">Query</h1>
-        <div className="grid-x query-container">
+        <h2 className="main-header">Query</h2>
+        <div className="grid-x data-container">
           <div className="cell medium-6 large-4 query-params">
             <QueryParams />
           </div>

@@ -4,8 +4,8 @@ import React from 'react';
 const TopBar = (props) => {
   return(
     <ul className="vertical medium-horizontal menu">
-      <li><a href="#0"><i className="fi-list"></i> <span>Query</span></a></li>
-      <li><a href="#0"><i className="fi-list"></i> <span>Tutors</span></a></li>
+      <li><i><button className="fi-list" onClick={props.onClick}>Query</button></i></li>
+      <li><a><i className="fi-list"></i> <span>Tutors</span></a></li>
     </ul>
   );
 };
