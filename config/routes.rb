@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  root 'tests#index'
-  resources :tests, only: [:index]
+  root 'data#index'
+  resources :data, only: [:index]
   resources :tutors, only: [:index]
   devise_for :users
 

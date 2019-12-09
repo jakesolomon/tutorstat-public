@@ -1,7 +1,7 @@
 class CreateTests < ActiveRecord::Migration[5.2]
   def change
     create_table :tests do |t|
-      t.date :date_entered, null: false
+      t.datetime :date_entered, null: false
       t.string :student_name, null: false
       t.integer :student_id
       t.string :tutor_name
