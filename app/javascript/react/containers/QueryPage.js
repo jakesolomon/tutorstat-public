@@ -45,7 +45,6 @@ class QueryPage extends Component {
 // TODO: Build function to send to QueryParams to collect data about user actions.
 
   render() {
-
     return(
       <div>
         <h2 className="main-header">Query</h2>

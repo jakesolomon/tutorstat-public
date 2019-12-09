@@ -1,5 +1,5 @@
 import React from 'react';
-// import '../../../../../node_modules/react-vis/dist/style.css';
+import '../../../../../node_modules/react-vis/dist/style.css';
 import {
   XYPlot,
   XAxis,
@@ -7,6 +7,13 @@ import {
   VerticalBarSeries,
   VerticalBarSeriesCanvas
 } from 'react-vis';
+
+  // const myDATA = [
+  //   {x: "800–1199", y: 40},
+  //   {x: "1200–1399", y: 142},
+  //   {x: "1400–1499", y: 102},
+  //   {x: "1500–1600", y: 59}
+  // ];
 
 // const {useCanvas} = this.state;
 // const content = useCanvas ? 'TOGGLE TO SVG' : 'TOGGLE TO CANVAS';

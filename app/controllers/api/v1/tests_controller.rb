@@ -1,8 +1,6 @@
 require 'pry'
 class Api::V1::TestsController < ApplicationController
   def index
-    # floof = Floof.find(params[:id])
-    # posts = floof.posts.order(created_at: :desc)
 
     tests = Test.all
     studentScores = {}
