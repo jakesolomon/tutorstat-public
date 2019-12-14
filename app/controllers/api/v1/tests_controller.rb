@@ -8,7 +8,7 @@ class Api::V1::TestsController < ApplicationController
         studentScores[test.student_name]=[test.total]
       else
         studentScores[test.student_name].push(test.total)
-        studentScores[test.student_name].sort!
+        # studentScores[test.student_name].sort!
       end
     end
 
@@ -23,14 +23,15 @@ class Api::V1::TestsController < ApplicationController
       # filter out students that only have one score listed
       if scores[1]
         # sort max score differences into buckets
+        # score increase is max-first, not max-min.
         if scores[0]<1200
-          scoresByStartingScore[:low].push(scores.last-scores[0])
+          scoresByStartingScore[:low].push(scores.max-scores[0])
         elsif scores[0]<1400
-          scoresByStartingScore[:mid].push(scores.last-scores[0])
+          scoresByStartingScore[:mid].push(scores.max-scores[0])
         elsif scores[0]<1500
-          scoresByStartingScore[:high].push(scores.last-scores[0])
+          scoresByStartingScore[:high].push(scores.max-scores[0])
         else
-          scoresByStartingScore[:veryHigh].push(scores.last-scores[0])
+          scoresByStartingScore[:veryHigh].push(scores.max-scores[0])
         end
       end
     end
