@@ -15,7 +15,22 @@ ActiveRecord::Schema.define(version: 2019_12_08_211605) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "tests", force: :cascade do |t|
+  create_table "acts", force: :cascade do |t|
+    t.datetime "date_entered", null: false
+    t.string "student_name", null: false
+    t.integer "student_id"
+    t.string "tutor_name"
+    t.integer "tutor_id"
+    t.string "form"
+    t.integer "english"
+    t.integer "math"
+    t.integer "reading"
+    t.integer "writing"
+    t.integer "composite"
+    t.boolean "extended"
+  end
+
+  create_table "sats", force: :cascade do |t|
     t.datetime "date_entered", null: false
     t.string "student_name", null: false
     t.integer "student_id"
