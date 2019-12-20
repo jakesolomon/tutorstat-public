@@ -12,7 +12,7 @@ require 'date'
 csv_text = File.read(Rails.root.join('lib', 'seeds', 'Scores-SAT.csv'))
 csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
 csv.each do |row|
-  t = Test.new
+  t = SAT.new
   t.date_entered = Date.strptime(row['Date Entered'], "%m/%d/%y")
   t.student_name = [row['Student First Name'], row['Student Last Name']].join(' ')
   t.student_id = row['Student ID']
@@ -25,5 +25,32 @@ csv.each do |row|
   t.writing = row['Writing']
   t.math = row['Math']
   t.extended = row['Extended']
-  puts t.save!
+  if t.valid?
+    puts t.save!
+  else
+    puts t.valid?
+  end
+end
+
+csv_text = File.read(Rails.root.join('lib', 'seeds', 'Scores-ACT.csv'))
+csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+csv.each do |row|
+  t = ACT.new
+  t.date_entered = Date.strptime(row['Date Entered'], "%m/%d/%y")
+  t.student_name = [row['Student First Name'], row['Student Last Name']].join(' ')
+  t.student_id = row['Student ID']
+  t.tutor_name = [row['Tutor First Name'], row['Tutor Last Name']].join(' ')
+  t.tutor_id = row['Tutor ID']
+  t.form = row['Form']
+  t.english = row['English']
+  t.math = row['Math']
+  t.reading = row['Reading']
+  t.writing = row['Writing']
+  t.composite = row['Composite']
+  t.extended = row['Extended']
+  if t.valid?
+    puts t.save!
+  else
+    puts t.valid?
+  end
 end
