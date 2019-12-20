@@ -22,6 +22,16 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
+  # From devcenter.Heroku:
+  # To use PostgreSQL locally with a Rails app your database.yml
+  # should contain the following configuration:
+
+  # adapter: postgresql
+  # host: localhost
+  # username: user
+  # database: app-dev
+
+  # Below is default
   <<: *default
   database: Thundercat_development
 
@@ -79,7 +89,13 @@ test:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
 production:
-  <<: *default
-  database: Thundercat_production
-  username: Thundercat
-  password: <%= ENV['THUNDERCAT_DATABASE_PASSWORD'] %>
+  # This, as above, agrees with
+  # https://devcenter.heroku.com/articles/rails-database-connection-behavior
+  url: <%= ENV['DATABASE_URL'] %>
+
+
+  # This all came default
+  # <<: *default
+  # database: Thundercat_production
+  # username: Thundercat
+  # password: <%= ENV['THUNDERCAT_DATABASE_PASSWORD'] %>

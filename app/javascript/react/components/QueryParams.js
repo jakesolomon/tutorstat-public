@@ -3,12 +3,12 @@ import React from 'react';
 
 const QueryParams = (props) => {
   return(
-    <div className="grid-x query-params-list">
+    <form className="grid-x query-params-list">
       <div className="row small-12">
-        <input type="radio" name="pokemon" value="Both" id="pokemonRed" required /><label htmlFor="pokemonRed">Combined</label>
-        <input type="radio" name="pokemon" value="Separate" id="pokemonBlue" /><label htmlFor="pokemonBlue">Separate</label>
-        <input type="radio" name="pokemon" value="SAT" id="pokemonYellow" /><label htmlFor="pokemonYellow">SAT</label>
-        <input type="radio" name="pokemon" value="ACT" id="pokemonYellow" /><label htmlFor="pokemonYellow">ACT</label>
+        <input disabled type="radio" name="testSelect" value="both" id="both" required /><label htmlFor="both">Combined</label>
+        <input disabled type="radio" name="testSelect" value="separate" id="separate" /><label htmlFor="separate">Separate</label>
+        <input onChange={props.changeQueryParams} type="radio" name="testSelect" value="sat" id="sat" /><label htmlFor="sat">SAT</label>
+        <input onChange={props.changeQueryParams} type="radio" name="testSelect" value="act" id="act" /><label htmlFor="act">ACT</label>
       </div>
       <div className="cell small-3">
         <div className="switch">
@@ -46,7 +46,7 @@ const QueryParams = (props) => {
       <div className="cell small-9">
         <p>Bake cake</p>
       </div>
-    </div>
+    </form>
   );
 };
 
