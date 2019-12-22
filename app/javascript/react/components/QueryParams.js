@@ -5,8 +5,8 @@ const QueryParams = (props) => {
   return(
     <form className="grid-x query-params-list">
       <div className="row small-12">
-        <input disabled type="radio" name="testSelect" value="both" id="both" required /><label htmlFor="both">Combined</label>
-        <input disabled type="radio" name="testSelect" value="separate" id="separate" /><label htmlFor="separate">Separate</label>
+        <input onChange={props.changeQueryParams} type="radio" name="testSelect" value="combined" id="combined" required /><label htmlFor="combined">Combined</label>
+        <input onChange={props.changeQueryParams} type="radio" name="testSelect" value="compare" id="compare" /><label htmlFor="compare">Compare</label>
         <input onChange={props.changeQueryParams} type="radio" name="testSelect" value="sat" id="sat" /><label htmlFor="sat">SAT</label>
         <input onChange={props.changeQueryParams} type="radio" name="testSelect" value="act" id="act" /><label htmlFor="act">ACT</label>
       </div>

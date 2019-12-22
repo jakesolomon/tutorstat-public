@@ -8,18 +8,14 @@ import {
   VerticalBarSeriesCanvas
 } from 'react-vis';
 
-  // const myDATA = [
-  //   {x: "800–1199", y: 40},
-  //   {x: "1200–1399", y: 142},
-  //   {x: "1400–1499", y: 102},
-  //   {x: "1500–1600", y: 59}
-  // ];
-
-// const {useCanvas} = this.state;
-// const content = useCanvas ? 'TOGGLE TO SVG' : 'TOGGLE TO CANVAS';
-// const BarSeries = useCanvas ? VerticalBarSeriesCanvas : VerticalBarSeries;
-
 const BarGraph = (props) => {
+
+  let barSeries = props.data.map(data => {
+    return(
+      <VerticalBarSeries data={data} />
+    );
+  });
+
   return (
     <div>
       <XYPlot
@@ -28,7 +24,7 @@ const BarGraph = (props) => {
         width={600}
         height={300}
       >
-        <VerticalBarSeries data={props.data} />
+        {barSeries}
         <XAxis />
         <YAxis />
       </XYPlot>

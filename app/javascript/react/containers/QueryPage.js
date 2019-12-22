@@ -21,6 +21,18 @@ class QueryPage extends Component {
         {x: "16–20", y: 0},
         {x: "21–25", y: 0},
         {x: "26–36", y: 0}
+      ],
+      convertedActData: [
+        {x: "800–1199", y: 0},
+        {x: "1200–1399", y: 0},
+        {x: "1400–1499", y: 0},
+        {x: "1500–1600", y: 0}
+      ],
+      combinedData: [
+        {x: "800–1199", y: 0},
+        {x: "1200–1399", y: 0},
+        {x: "1400–1499", y: 0},
+        {x: "1500–1600", y: 0}
       ]
       // Use state to determine which query parameters have been checked.
     };
@@ -40,18 +52,24 @@ class QueryPage extends Component {
   graphData() {
     let data;
     if (this.state.parameters.test == "sat") {
-      data = this.state.satData;
+      data = [this.state.satData];
     }
     else if (this.state.parameters.test == "act") {
-      data = this.state.actData;
+      data = [this.state.actData];
+    }
+    else if (this.state.parameters.test == "combined") {
+      data = [this.state.combinedData];
+    }
+    else if (this.state.parameters.test == "compare") {
+      data = [this.state.satData, this.state.convertedActData];
     }
     else {
-      data = [
+      data = [[
         {x: "Low", y: 0},
         {x: "Medium", y: 0},
         {x: "High", y: 0},
         {x: "Very High", y: 0}
-      ];
+      ]];
     }
     return data;
   }
@@ -82,7 +100,25 @@ class QueryPage extends Component {
         {x: "21–25", y: body.actScoresAvgIncreaseByStartingScore.high},
         {x: "26–36", y: body.actScoresAvgIncreaseByStartingScore.veryHigh}
       ];
-      this.setState( { satData: satData, actData: actData } );
+      let convertedActData = [
+        {x: "800–1199", y: body.convertedActScoresAvgIncreaseByStartingScore.low},
+        {x: "1200–1399", y: body.convertedActScoresAvgIncreaseByStartingScore.mid},
+        {x: "1400–1499", y: body.convertedActScoresAvgIncreaseByStartingScore.high},
+        {x: "1500–1600", y: body.convertedActScoresAvgIncreaseByStartingScore.veryHigh}
+      ];
+      let combinedData = [
+        {x: "800–1199", y: body.combinedActScoresAvgIncreaseByStartingScore.low},
+        {x: "1200–1399", y: body.combinedActScoresAvgIncreaseByStartingScore.mid},
+        {x: "1400–1499", y: body.combinedActScoresAvgIncreaseByStartingScore.high},
+        {x: "1500–1600", y: body.combinedActScoresAvgIncreaseByStartingScore.veryHigh}
+      ];
+      this.setState( {
+        satData: satData,
+        actData: actData,
+        convertedActData: convertedActData,
+        combinedData: combinedData
+        }
+      );
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`));
   }
@@ -90,6 +126,9 @@ class QueryPage extends Component {
 // TODO: Build function to send to QueryParams to collect data about user actions.
 
   render() {
+
+    let barGraph;
+    // if this.state.parameters.test == compare
 
     return(
       <div>
