@@ -10,30 +10,10 @@ class QueryPage extends Component {
       parameters: {
         test: false
       },
-      satData: [
-        {x: "800–1199", y: 0},
-        {x: "1200–1399", y: 0},
-        {x: "1400–1499", y: 0},
-        {x: "1500–1600", y: 0}
-      ],
-      actData: [
-        {x: "1–15", y: 0},
-        {x: "16–20", y: 0},
-        {x: "21–25", y: 0},
-        {x: "26–36", y: 0}
-      ],
-      convertedActData: [
-        {x: "800–1199", y: 0},
-        {x: "1200–1399", y: 0},
-        {x: "1400–1499", y: 0},
-        {x: "1500–1600", y: 0}
-      ],
-      combinedData: [
-        {x: "800–1199", y: 0},
-        {x: "1200–1399", y: 0},
-        {x: "1400–1499", y: 0},
-        {x: "1500–1600", y: 0}
-      ]
+      satData: [],
+      actData: [],
+      convertedActData: [],
+      combinedData: []
       // Use state to determine which query parameters have been checked.
     };
     this.changeQueryParams=this.changeQueryParams.bind(this);
@@ -64,14 +44,17 @@ class QueryPage extends Component {
       data = [this.state.satData, this.state.convertedActData];
     }
     else {
-      data = [[
-        {x: "Low", y: 0},
-        {x: "Medium", y: 0},
-        {x: "High", y: 0},
-        {x: "Very High", y: 0}
-      ]];
+      data = [[ ]];
     }
     return data;
+  }
+
+  assignXAndY(scores) {
+    let output = [];
+    Object.keys(scores).forEach(range => {
+      output.push( { x: range, y: scores[range] } );
+    });
+    return output;
   }
 
   componentDidMount() {
@@ -88,48 +71,18 @@ class QueryPage extends Component {
     })
     .then(response => response.json())
     .then(body => {
-      let satData = [
-        {x: "800–1199", y: body.satScoresAvgIncreaseByStartingScore.low},
-        {x: "1200–1399", y: body.satScoresAvgIncreaseByStartingScore.mid},
-        {x: "1400–1499", y: body.satScoresAvgIncreaseByStartingScore.high},
-        {x: "1500–1600", y: body.satScoresAvgIncreaseByStartingScore.veryHigh}
-      ];
-      let actData = [
-        {x: "1–15", y: body.actScoresAvgIncreaseByStartingScore.low},
-        {x: "16–20", y: body.actScoresAvgIncreaseByStartingScore.mid},
-        {x: "21–25", y: body.actScoresAvgIncreaseByStartingScore.high},
-        {x: "26–36", y: body.actScoresAvgIncreaseByStartingScore.veryHigh}
-      ];
-      let convertedActData = [
-        {x: "800–1199", y: body.convertedActScoresAvgIncreaseByStartingScore.low},
-        {x: "1200–1399", y: body.convertedActScoresAvgIncreaseByStartingScore.mid},
-        {x: "1400–1499", y: body.convertedActScoresAvgIncreaseByStartingScore.high},
-        {x: "1500–1600", y: body.convertedActScoresAvgIncreaseByStartingScore.veryHigh}
-      ];
-      let combinedData = [
-        {x: "800–1199", y: body.combinedActScoresAvgIncreaseByStartingScore.low},
-        {x: "1200–1399", y: body.combinedActScoresAvgIncreaseByStartingScore.mid},
-        {x: "1400–1499", y: body.combinedActScoresAvgIncreaseByStartingScore.high},
-        {x: "1500–1600", y: body.combinedActScoresAvgIncreaseByStartingScore.veryHigh}
-      ];
       this.setState( {
-        satData: satData,
-        actData: actData,
-        convertedActData: convertedActData,
-        combinedData: combinedData
+        satData: this.assignXAndY(body.satScores),
+        actData: this.assignXAndY(body.actScores),
+        convertedActData: this.assignXAndY(body.convertedActScores),
+        combinedData: this.assignXAndY(body.combinedScores)
         }
       );
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`));
   }
 
-// TODO: Build function to send to QueryParams to collect data about user actions.
-
   render() {
-
-    let barGraph;
-    // if this.state.parameters.test == compare
-
     return(
       <div>
         <h2 className="main-header">Query</h2>

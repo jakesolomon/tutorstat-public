@@ -7,9 +7,9 @@ To initialize database, run:
 rake db:migrate
 rake db:seed
 
-Javascript dependencies are managed using Yarn (I'm using version 1.17.3), static assets are compiled with Webpacker 3.3.
+Javascript dependencies are managed using Yarn (I'm using version 1.17.3), static assets are created with Webpacker 3.3, javascript is compiled using Babel 5.8.35.
 
-To compile static assets, run:
+To compile assets, run:
 
 yarn run start
 

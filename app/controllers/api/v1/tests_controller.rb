@@ -7,7 +7,6 @@ class Api::V1::TestsController < ApplicationController
 # share from the same database of functions. For now, I'll just make separate
 # API controllers that repeat a lot.
 
-# This is gonna be real ugly, refactor later
   def index
     sats = SAT.all
     satScores = {}
@@ -16,7 +15,6 @@ class Api::V1::TestsController < ApplicationController
         satScores[sat.student_name]=[sat.total]
       else
         satScores[sat.student_name].push(sat.total)
-        # studentScores[test.student_name].sort!
       end
     end
 
@@ -27,7 +25,6 @@ class Api::V1::TestsController < ApplicationController
         actScores[act.student_name]=[act.composite]
       else
         actScores[act.student_name].push(act.composite)
-        # studentScores[test.student_name].sort!
       end
     end
 
@@ -66,150 +63,151 @@ class Api::V1::TestsController < ApplicationController
 
 # I should probably just use some funciton to put one score in front and avoid
 # making a second hash altogether.
-    satScoresByStartingScore = {
-      low: [],
-      mid: [],
-      high: [],
-      veryHigh: []
+    satIncreases = {
+      "400–999": [],
+      "1000–1099": [],
+      "1100–1199": [],
+      "1200–1299": [],
+      "1300–1399": [],
+      "1400–1499": [],
+      "1500–1600": []
     }
 
-    actScoresByStartingScore = {
-      low: [],
-      mid: [],
-      high: [],
-      veryHigh: []
+    actIncreases = {
+      "1–19": [],
+      "20–21": [],
+      "22–24": [],
+      "25–27": [],
+      "28–29": [],
+      "30–32": [],
+      "33–36": []
     }
 
-    convertedActScoresByStartingScore = {
-      low: [],
-      mid: [],
-      high: [],
-      veryHigh: []
+    actConvertedIncreases = {
+      "400–999": [],
+      "1000–1099": [],
+      "1100–1199": [],
+      "1200–1299": [],
+      "1300–1399": [],
+      "1400–1499": [],
+      "1500–1600": []
     }
 
-    combinedActAndSatScoresByStartingScore = {
-      low: [],
-      mid: [],
-      high: [],
-      veryHigh: []
+    combinedActAndSatIncreases = {
+      "400–999": [],
+      "1000–1099": [],
+      "1100–1199": [],
+      "1200–1299": [],
+      "1300–1399": [],
+      "1400–1499": [],
+      "1500–1600": []
     }
 
-    # Populates satScoresByStartingScore and combinedActAndSatScoresByStartingScore
+    # Populates satIncreases and combinedActAndSatIncreases
     satScores.each do |student, scores|
       # filter out students that only have one score listed
       if scores[1]
         # sort max score differences into buckets
-        # score increase is max-first, not max-min.
-        if scores[0]<1200
-          satScoresByStartingScore[:low].push(scores.max-scores[0])
-          combinedActAndSatScoresByStartingScore[:low].push(scores.max-scores[0])
+        if scores[0]<1000
+          satIncreases[:"400–999"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"400–999"].push(scores.max-scores[0])
+        elsif scores[0]<1100
+          satIncreases[:"1000–1099"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"1000–1099"].push(scores.max-scores[0])
+        elsif scores[0]<1200
+          satIncreases[:"1100–1199"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"1100–1199"].push(scores.max-scores[0])
+        elsif scores[0]<1300
+          satIncreases[:"1200–1299"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"1200–1299"].push(scores.max-scores[0])
         elsif scores[0]<1400
-          satScoresByStartingScore[:mid].push(scores.max-scores[0])
-          combinedActAndSatScoresByStartingScore[:mid].push(scores.max-scores[0])
+          satIncreases[:"1300–1399"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"1300–1399"].push(scores.max-scores[0])
         elsif scores[0]<1500
-          satScoresByStartingScore[:high].push(scores.max-scores[0])
-          combinedActAndSatScoresByStartingScore[:high].push(scores.max-scores[0])
+          satIncreases[:"1400–1499"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"1400–1499"].push(scores.max-scores[0])
         else
-          satScoresByStartingScore[:veryHigh].push(scores.max-scores[0])
-          combinedActAndSatScoresByStartingScore[:veryHigh].push(scores.max-scores[0])
+          satIncreases[:"1500–1600"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"1500–1600"].push(scores.max-scores[0])
         end
       end
     end
 
-    # Populates actScoresByStartingScore, convertedActScoresByStartingScore,
-    # and combinedActAndSatScoresByStartingScore.
+    # Populates actIncreases, actConvertedIncreases,
+    # and combinedActAndSatIncreases.
     actScores.each do |student, scores|
       # filter out students that only have one score listed
       if scores[1]
         # sort max score differences into buckets
-        # score increase is max-first, not max-min.
-        if scores[0]<16
-          actScoresByStartingScore[:low].push(scores.max-scores[0])
-        elsif scores[0]<21
-          actScoresByStartingScore[:mid].push(scores.max-scores[0])
-        elsif scores[0]<26
-          actScoresByStartingScore[:high].push(scores.max-scores[0])
+        if scores[0]<20
+          actIncreases[:"1–19"].push(scores.max-scores[0])
+        elsif scores[0]<22
+          actIncreases[:"20–21"].push(scores.max-scores[0])
+        elsif scores[0]<25
+          actIncreases[:"22–24"].push(scores.max-scores[0])
+        elsif scores[0]<28
+          actIncreases[:"25–27"].push(scores.max-scores[0])
+        elsif scores[0]<30
+          actIncreases[:"28–29"].push(scores.max-scores[0])
+        elsif scores[0]<33
+          actIncreases[:"30–32"].push(scores.max-scores[0])
         else
-          actScoresByStartingScore[:veryHigh].push(scores.max-scores[0])
+          actIncreases[:"33–36"].push(scores.max-scores[0])
         end
 
         # Now convert scores to SAT equivalent
         scores.map! { |score| convertActToSat[score]}
 
-        if scores[0]<1200
-          convertedActScoresByStartingScore[:low].push(scores.max-scores[0])
-          combinedActAndSatScoresByStartingScore[:low].push(scores.max-scores[0])
+        if scores[0]<1000
+          actConvertedIncreases[:"400–999"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"400–999"].push(scores.max-scores[0])
+        elsif scores[0]<1100
+          actConvertedIncreases[:"1000–1099"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"1000–1099"].push(scores.max-scores[0])
+        elsif scores[0]<1200
+          actConvertedIncreases[:"1100–1199"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"1100–1199"].push(scores.max-scores[0])
+        elsif scores[0]<1300
+          actConvertedIncreases[:"1200–1299"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"1200–1299"].push(scores.max-scores[0])
         elsif scores[0]<1400
-          convertedActScoresByStartingScore[:mid].push(scores.max-scores[0])
-          combinedActAndSatScoresByStartingScore[:mid].push(scores.max-scores[0])
+          actConvertedIncreases[:"1300–1399"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"1300–1399"].push(scores.max-scores[0])
         elsif scores[0]<1500
-          convertedActScoresByStartingScore[:high].push(scores.max-scores[0])
-          combinedActAndSatScoresByStartingScore[:high].push(scores.max-scores[0])
+          actConvertedIncreases[:"1400–1499"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"1400–1499"].push(scores.max-scores[0])
         else
-          convertedActScoresByStartingScore[:veryHigh].push(scores.max-scores[0])
-          combinedActAndSatScoresByStartingScore[:veryHigh].push(scores.max-scores[0])
+          actConvertedIncreases[:"1500–1600"].push(scores.max-scores[0])
+          combinedActAndSatIncreases[:"1500–1600"].push(scores.max-scores[0])
         end
       end
     end
 
-    # I can definitely just write a function to average values and plug each
-    # one of these into it.
+    def averageScores(scores)
+      return scores.inject{ | sum, el| sum + el }.to_f / scores.size
+    end
 
-    satLowAvgScoreIncrease = satScoresByStartingScore[:low].inject{ |sum, el| sum + el }.to_f / satScoresByStartingScore[:low].size
-    satMidAvgScoreIncrease = satScoresByStartingScore[:mid].inject{ |sum, el| sum + el }.to_f / satScoresByStartingScore[:mid].size
-    satHighAvgScoreIncrease = satScoresByStartingScore[:high].inject{ |sum, el| sum + el }.to_f / satScoresByStartingScore[:high].size
-    satVeryHighAvgScoreIncrease = satScoresByStartingScore[:veryHigh].inject{ |sum, el| sum + el }.to_f / satScoresByStartingScore[:veryHigh].size
-
-    actLowAvgScoreIncrease = actScoresByStartingScore[:low].inject{ |sum, el| sum + el }.to_f / actScoresByStartingScore[:low].size
-    actMidAvgScoreIncrease = actScoresByStartingScore[:mid].inject{ |sum, el| sum + el }.to_f / actScoresByStartingScore[:mid].size
-    actHighAvgScoreIncrease = actScoresByStartingScore[:high].inject{ |sum, el| sum + el }.to_f / actScoresByStartingScore[:high].size
-    actVeryHighAvgScoreIncrease = actScoresByStartingScore[:veryHigh].inject{ |sum, el| sum + el }.to_f / actScoresByStartingScore[:veryHigh].size
-
-    convertedActLowAvgScoreIncrease = convertedActScoresByStartingScore[:low].inject{ |sum, el| sum + el }.to_f / convertedActScoresByStartingScore[:low].size
-    convertedActMidAvgScoreIncrease = convertedActScoresByStartingScore[:mid].inject{ |sum, el| sum + el }.to_f / convertedActScoresByStartingScore[:mid].size
-    convertedActHighAvgScoreIncrease = convertedActScoresByStartingScore[:high].inject{ |sum, el| sum + el }.to_f / convertedActScoresByStartingScore[:high].size
-    convertedActVeryHighAvgScoreIncrease = convertedActScoresByStartingScore[:veryHigh].inject{ |sum, el| sum + el }.to_f / convertedActScoresByStartingScore[:veryHigh].size
-
-    combinedActAndSatLowAvgScoreIncrease = combinedActAndSatScoresByStartingScore[:low].inject{ |sum, el| sum + el }.to_f / combinedActAndSatScoresByStartingScore[:low].size
-    combinedActAndSatMidAvgScoreIncrease = combinedActAndSatScoresByStartingScore[:mid].inject{ |sum, el| sum + el }.to_f / combinedActAndSatScoresByStartingScore[:mid].size
-    combinedActAndSatHighAvgScoreIncrease = combinedActAndSatScoresByStartingScore[:high].inject{ |sum, el| sum + el }.to_f / combinedActAndSatScoresByStartingScore[:high].size
-    combinedActAndSatVeryHighAvgScoreIncrease = combinedActAndSatScoresByStartingScore[:veryHigh].inject{ |sum, el| sum + el }.to_f / combinedActAndSatScoresByStartingScore[:veryHigh].size
-
-
-    satScoresAvgIncreaseByStartingScore = {
-      low: satLowAvgScoreIncrease.round(1),
-      mid: satMidAvgScoreIncrease.round(1),
-      high: satHighAvgScoreIncrease.round(1),
-      veryHigh: satVeryHighAvgScoreIncrease.round(1)
+    satIncreases.each { |range, scores|
+      satIncreases[range] = averageScores(scores).round(0)
     }
 
-    actScoresAvgIncreaseByStartingScore = {
-      low: actLowAvgScoreIncrease.round(1),
-      mid: actMidAvgScoreIncrease.round(1),
-      high: actHighAvgScoreIncrease.round(1),
-      veryHigh: actVeryHighAvgScoreIncrease.round(1)
+    actIncreases.each { |range, scores|
+      actIncreases[range] = averageScores(scores).round(1)
     }
 
-    convertedActScoresAvgIncreaseByStartingScore = {
-      low: convertedActLowAvgScoreIncrease.round(1),
-      mid: convertedActMidAvgScoreIncrease.round(1),
-      high: convertedActHighAvgScoreIncrease.round(1),
-      veryHigh: convertedActVeryHighAvgScoreIncrease.round(1)
+    actConvertedIncreases.each { |range, scores|
+      actConvertedIncreases[range] = averageScores(scores).round(0)
     }
 
-    combinedActScoresAvgIncreaseByStartingScore = {
-      low: combinedActAndSatLowAvgScoreIncrease.round(1),
-      mid: combinedActAndSatMidAvgScoreIncrease.round(1),
-      high: combinedActAndSatHighAvgScoreIncrease.round(1),
-      veryHigh: combinedActAndSatVeryHighAvgScoreIncrease.round(1)
+    combinedActAndSatIncreases.each { |range, scores|
+      combinedActAndSatIncreases[range] = averageScores(scores).round(0)
     }
-
 
     payload = {
-      satScoresAvgIncreaseByStartingScore: satScoresAvgIncreaseByStartingScore,
-      actScoresAvgIncreaseByStartingScore: actScoresAvgIncreaseByStartingScore,
-      convertedActScoresAvgIncreaseByStartingScore: convertedActScoresAvgIncreaseByStartingScore,
-      combinedActScoresAvgIncreaseByStartingScore: combinedActScoresAvgIncreaseByStartingScore
+      satScores: satIncreases,
+      actScores: actIncreases,
+      convertedActScores: actConvertedIncreases,
+      combinedScores: combinedActAndSatIncreases,
     }
 
     render json: payload
