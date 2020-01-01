@@ -1,34 +1,62 @@
 import React from 'react';
-// import '../../../../../node_modules/react-vis/dist/style.css';
+import '../../../../node_modules/react-vis/dist/style.css';
 import {
   XYPlot,
   XAxis,
   YAxis,
   VerticalBarSeries,
-  VerticalBarSeriesCanvas
+  VerticalBarSeriesCanvas,
+  DiscreteColorLegend
 } from 'react-vis';
 
-  // const myDATA = [
-  //   {x: "800–1199", y: 40},
-  //   {x: "1200–1399", y: 142},
-  //   {x: "1400–1499", y: 102},
-  //   {x: "1500–1600", y: 59}
-  // ];
-
-// const {useCanvas} = this.state;
-// const content = useCanvas ? 'TOGGLE TO SVG' : 'TOGGLE TO CANVAS';
-// const BarSeries = useCanvas ? VerticalBarSeriesCanvas : VerticalBarSeries;
-
 const BarGraph = (props) => {
+
+  let seriesColors = [
+    "00EE00",
+    "EE0000"
+  ];
+
+  let barSeries = props.data.data.map(data => {
+    return(
+      <VerticalBarSeries
+      data={data}
+      key={props.data.data.indexOf(data)}
+      color={seriesColors[props.data.data.indexOf(data)]}
+      />
+    );
+  });
+
+  let legendItems = [
+    {
+      title: props.data.legend[0],
+      color: seriesColors[0]
+    }
+  ];
+
+  if (props.data.data[1]) {
+    legendItems.push(
+      {
+        title: props.data.legend[1],
+        color: seriesColors[1]
+      }
+    );
+  }
+
   return (
-    <div>
+    <div className="barGraph row">
       <XYPlot
+        className="cell large-9"
         margin={{top: 40}}
         xType="ordinal"
         width={600}
         height={300}
       >
-        <VerticalBarSeries data={props.data} />
+        <DiscreteColorLegend
+        className="cell large-3"
+        items={legendItems}
+        orientation="horizontal"
+        />
+        {barSeries}
         <XAxis />
         <YAxis />
       </XYPlot>

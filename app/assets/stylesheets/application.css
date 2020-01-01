@@ -53,3 +53,7 @@
   border-color: #BBBBBB;
   border-style: solid;
 }
+
+.barGraph {
+  display: inline-block;
+}

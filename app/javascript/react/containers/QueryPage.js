@@ -7,53 +7,83 @@ class QueryPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      parameters: {
-        test: false
-      },
-      satData: [
-        {x: "800–1199", y: 0},
-        {x: "1200–1399", y: 0},
-        {x: "1400–1499", y: 0},
-        {x: "1500–1600", y: 0}
-      ],
-      actData: [
-        {x: "1–15", y: 0},
-        {x: "16–20", y: 0},
-        {x: "21–25", y: 0},
-        {x: "26–36", y: 0}
-      ]
+      test: false,
+      percentile: false,
+      satScores: [],
+      satPercentiles: [],
+      actScores: [],
+      actPercentiles: [],
+      convertedactScores: [],
+      convertedActPercentiles: [],
+      combinedScores: [],
+      combinedPercentiles: []
       // Use state to determine which query parameters have been checked.
     };
-    this.changeQueryParams=this.changeQueryParams.bind(this);
+    this.changeTest=this.changeTest.bind(this);
+    this.togglePercentile=this.togglePercentile.bind(this);
   }
 
-  // Function to track changes to query parameters
-  changeQueryParams() {
-    let parameters = {
-      test: event.target.value
-    };
-    this.setState( {
-      parameters: parameters
-    } );
+  // Functions to track changes to query parameters
+  changeTest() {
+    this.setState( { test: event.target.value } );
+  }
+
+  togglePercentile() {
+    if (this.state.percentile == false) {
+      this.setState( { percentile: true } );
+    } else {
+      this.setState( { percentile: false } );
+    }
   }
 
   graphData() {
     let data;
-    if (this.state.parameters.test == "sat") {
-      data = this.state.satData;
+    let legend;
+    if (this.state.test == "sat" && this.state.percentile == false) {
+      data = [this.state.satScores];
+      legend = ["SAT Score Increase"];
     }
-    else if (this.state.parameters.test == "act") {
-      data = this.state.actData;
+    else if (this.state.test == "sat" && this.state.percentile == true) {
+      data = [this.state.satPercentiles];
+      legend = ["SAT Percentile Increase"];
+    }
+    else if (this.state.test == "act" && this.state.percentile == false) {
+      data = [this.state.actScores];
+      legend = ["ACT Score Increase"];
+    }
+    else if (this.state.test == "act" && this.state.percentile == true) {
+      data = [this.state.actPercentiles];
+      legend = ["ACT Percentile Increase"];
+    }
+    else if (this.state.test == "combined" && this.state.percentile == false) {
+      data = [this.state.combinedScores];
+      legend = ["Combined SAT and ACT Score Increase"];
+    }
+    else if (this.state.test == "combined" && this.state.percentile == true) {
+      data = [this.state.combinedPercentiles];
+      legend = ["Combined SAT and ACT Percentile Increase"];
+    }
+    else if (this.state.test == "compare" && this.state.percentile == false) {
+      data = [this.state.satScores, this.state.convertedactScores];
+      legend = ["SAT Score Increase", "ACT Score Increase (as SAT equivalent)"];
+    }
+    else if (this.state.test == "compare" && this.state.percentile == true) {
+      data = [this.state.satPercentiles, this.state.convertedActPercentiles];
+      legend = ["SAT Percentile Increase", "ACT Percentile Increase (sorted by SAT equivalent)"];
     }
     else {
-      data = [
-        {x: "Low", y: 0},
-        {x: "Medium", y: 0},
-        {x: "High", y: 0},
-        {x: "Very High", y: 0}
-      ];
+      data = [[ ]];
+      legend = [""];
     }
-    return data;
+    return {data: data, legend: legend};
+  }
+
+  assignXAndY(scores) {
+    let output = [];
+    Object.keys(scores).forEach(range => {
+      output.push( { x: range, y: scores[range] } );
+    });
+    return output;
   }
 
   componentDidMount() {
@@ -70,33 +100,28 @@ class QueryPage extends Component {
     })
     .then(response => response.json())
     .then(body => {
-      let satData = [
-        {x: "800–1199", y: body.satScoresAvgIncreaseByStartingScore.low},
-        {x: "1200–1399", y: body.satScoresAvgIncreaseByStartingScore.mid},
-        {x: "1400–1499", y: body.satScoresAvgIncreaseByStartingScore.high},
-        {x: "1500–1600", y: body.satScoresAvgIncreaseByStartingScore.veryHigh}
-      ];
-      let actData = [
-        {x: "1–15", y: body.actScoresAvgIncreaseByStartingScore.low},
-        {x: "16–20", y: body.actScoresAvgIncreaseByStartingScore.mid},
-        {x: "21–25", y: body.actScoresAvgIncreaseByStartingScore.high},
-        {x: "26–36", y: body.actScoresAvgIncreaseByStartingScore.veryHigh}
-      ];
-      this.setState( { satData: satData, actData: actData } );
+      this.setState( {
+        satScores: this.assignXAndY(body.satScores),
+        satPercentiles: this.assignXAndY(body.satPercentiles),
+        actScores: this.assignXAndY(body.actScores),
+        actPercentiles: this.assignXAndY(body.actPercentiles),
+        convertedactScores: this.assignXAndY(body.convertedActScores),
+        convertedActPercentiles: this.assignXAndY(body.convertedActPercentiles),
+        combinedScores: this.assignXAndY(body.combinedScores),
+        combinedPercentiles: this.assignXAndY(body.combinedPercentiles)
+        }
+      );
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`));
   }
 
-// TODO: Build function to send to QueryParams to collect data about user actions.
-
   render() {
-
     return(
       <div>
         <h2 className="main-header">Query</h2>
         <div className="grid-x data-container">
           <div className="cell medium-6 large-4 query-params">
-            <QueryParams changeQueryParams={this.changeQueryParams}/>
+            <QueryParams changeTest={this.changeTest} togglePercentile={this.togglePercentile}/>
           </div>
           <div className="cell medium-6 large-8 query-display">
             <BarGraph data={this.graphData()}/>
