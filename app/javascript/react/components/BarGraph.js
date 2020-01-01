@@ -44,12 +44,14 @@ const BarGraph = (props) => {
 
   return (
     <div className="barGraph row">
+      <h4 className="barGraph-header">{props.data.title}</h4>
       <XYPlot
         className="cell large-9"
-        margin={{top: 40}}
+        margin={{top: 40, left: 70, bottom: 45}}
         xType="ordinal"
-        width={600}
+        width={700}
         height={300}
+        animation={true}
       >
         <DiscreteColorLegend
         className="cell large-3"
@@ -57,8 +59,25 @@ const BarGraph = (props) => {
         orientation="horizontal"
         />
         {barSeries}
-        <XAxis />
-        <YAxis />
+        <XAxis
+        animation={false}
+        tickSize={0}
+        style={{ text: {fontSize: 14} }}
+        />
+        <XAxis
+        title={props.data.xLabel}
+        style={{ line: {stroke:'none'} }}
+        animation={false}
+        top={303}
+        />
+        <YAxis
+        style={{ text: {fontSize: 14} }}
+        />
+        <YAxis
+        title={props.data.yLabel}
+        style={{ line: {stroke:'none'}, text: {fill: 'none'} }}
+        left={-65}
+        />
       </XYPlot>
     </div>
   );

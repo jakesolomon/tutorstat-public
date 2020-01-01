@@ -39,6 +39,18 @@ class QueryPage extends Component {
   graphData() {
     let data;
     let legend;
+    let title;
+    let yLabel;
+    let xLabel = "Starting Score";
+
+    if (this.state.percentile == false && this.state.test) {
+      title = "Average Score Increase of Students by Starting Score";
+      yLabel = "Points increase";
+    } else if (this.state.test) {
+      title = "Average Percentile Increase of Students by Starting Score";
+      yLabel = "Percentile increase";
+    }
+
     if (this.state.test == "sat" && this.state.percentile == false) {
       data = [this.state.satScores];
       legend = ["SAT Score Increase"];
@@ -75,7 +87,7 @@ class QueryPage extends Component {
       data = [[ ]];
       legend = [""];
     }
-    return {data: data, legend: legend};
+    return {data: data, legend: legend, title: title, xLabel: xLabel, yLabel: yLabel};
   }
 
   assignXAndY(scores) {

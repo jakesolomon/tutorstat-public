@@ -57,3 +57,7 @@
 .barGraph {
   display: inline-block;
 }
+
+.barGraph-header {
+  padding: 0px 10px;
+}
