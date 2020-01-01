@@ -5,14 +5,14 @@ const QueryParams = (props) => {
   return(
     <form className="grid-x query-params-list">
       <div className="row small-12">
-        <input onChange={props.changeQueryParams} type="radio" name="testSelect" value="combined" id="combined" required /><label htmlFor="combined">Combined</label>
-        <input onChange={props.changeQueryParams} type="radio" name="testSelect" value="compare" id="compare" /><label htmlFor="compare">Compare</label>
-        <input onChange={props.changeQueryParams} type="radio" name="testSelect" value="sat" id="sat" /><label htmlFor="sat">SAT</label>
-        <input onChange={props.changeQueryParams} type="radio" name="testSelect" value="act" id="act" /><label htmlFor="act">ACT</label>
+        <input onChange={props.changeTest} type="radio" name="testSelect" value="combined" id="combined" /><label htmlFor="combined">Combined</label>
+        <input onChange={props.changeTest} type="radio" name="testSelect" value="compare" id="compare" /><label htmlFor="compare">Compare</label>
+        <input onChange={props.changeTest} type="radio" name="testSelect" value="sat" id="sat" /><label htmlFor="sat">SAT</label>
+        <input onChange={props.changeTest} type="radio" name="testSelect" value="act" id="act" /><label htmlFor="act">ACT</label>
       </div>
       <div className="cell small-3">
         <div className="switch">
-          <input className="switch-input" id="percentileSwitch" type="checkbox" name="percentileSwitch" />
+          <input onChange={props.togglePercentile} className="switch-input" id="percentileSwitch" type="checkbox" name="percentileSwitch" />
           <label className="switch-paddle" htmlFor="percentileSwitch">
             <span className="switch-active" aria-hidden="true">On</span>
             <span className="switch-inactive" aria-hidden="true">Off</span>
