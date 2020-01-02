@@ -61,3 +61,7 @@
 .barGraph-header {
   padding: 0px 10px;
 }
+
+.disappear {
+  visibility: hidden;
+}

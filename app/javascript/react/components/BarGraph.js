@@ -6,7 +6,8 @@ import {
   YAxis,
   VerticalBarSeries,
   VerticalBarSeriesCanvas,
-  DiscreteColorLegend
+  DiscreteColorLegend,
+  Hint
 } from 'react-vis';
 
 const BarGraph = (props) => {
@@ -42,6 +43,11 @@ const BarGraph = (props) => {
     );
   }
 
+  let visibility = "";
+  if (!props.showStudentCount) {
+    visibility = "disappear";
+  }
+
   return (
     <div className="barGraph row">
       <h4 className="barGraph-header">{props.data.title}</h4>
@@ -69,6 +75,15 @@ const BarGraph = (props) => {
         style={{ line: {stroke:'none'} }}
         animation={false}
         top={303}
+        />
+        <XAxis
+        tickFormat={v => props.data.studentCount.map(count => {
+          return (count[v]);
+        }).join(" | ")}
+        top={0}
+        style={{ line: {stroke:'none'}, text: {fontSize: 14} }}
+        animation={false}
+        className={visibility}
         />
         <YAxis
         style={{ text: {fontSize: 14} }}

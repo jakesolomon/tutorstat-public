@@ -233,8 +233,6 @@ class Api::V1::TestsController < ApplicationController
       end
     end
 
-# I should probably just use some funciton to put one score in front and avoid
-# making a second hash altogether.
     satIncreases = {
       "400–999": [],
       "1000–1099": [],
@@ -315,6 +313,45 @@ class Api::V1::TestsController < ApplicationController
       "1500–1600": []
     }
 
+    studentCount = {
+      sat: {
+        "400–999": 0,
+        "1000–1099": 0,
+        "1100–1199": 0,
+        "1200–1299": 0,
+        "1300–1399": 0,
+        "1400–1499": 0,
+        "1500–1600": 0
+      },
+      act: {
+        "1–19": 0,
+        "20–21": 0,
+        "22–24": 0,
+        "25–27": 0,
+        "28–29": 0,
+        "30–32": 0,
+        "33–36": 0
+      },
+      actConverted: {
+        "400–999": 0,
+        "1000–1099": 0,
+        "1100–1199": 0,
+        "1200–1299": 0,
+        "1300–1399": 0,
+        "1400–1499": 0,
+        "1500–1600": 0
+      },
+      combined: {
+        "400–999": 0,
+        "1000–1099": 0,
+        "1100–1199": 0,
+        "1200–1299": 0,
+        "1300–1399": 0,
+        "1400–1499": 0,
+        "1500–1600": 0
+      }
+    }
+
     # Populates satIncreases, satPercentileIncreases, combinedActAndSatIncreases, and combinedActAndSatPercentileIncreases
     satScores.each do |student, scores|
       # filter out students that only have one score listed
@@ -329,36 +366,50 @@ class Api::V1::TestsController < ApplicationController
           satPercentileIncreases[:"400–999"].push(percentileIncrease)
           combinedActAndSatIncreases[:"400–999"].push(scoreIncrease)
           combinedActAndSatPercentileIncreases[:"400–999"].push(percentileIncrease)
+          studentCount[:sat][:"400–999"] += 1
+          studentCount[:combined][:"400–999"] += 1
         elsif scores[0]<1100
           satIncreases[:"1000–1099"].push(scoreIncrease)
           satPercentileIncreases[:"1000–1099"].push(percentileIncrease)
           combinedActAndSatIncreases[:"1000–1099"].push(scoreIncrease)
           combinedActAndSatPercentileIncreases[:"1000–1099"].push(percentileIncrease)
+          studentCount[:sat][:"1000–1099"] += 1
+          studentCount[:combined][:"1000–1099"] += 1
         elsif scores[0]<1200
           satIncreases[:"1100–1199"].push(scoreIncrease)
           satPercentileIncreases[:"1100–1199"].push(percentileIncrease)
           combinedActAndSatIncreases[:"1100–1199"].push(scoreIncrease)
           combinedActAndSatPercentileIncreases[:"1100–1199"].push(percentileIncrease)
+          studentCount[:sat][:"1100–1199"] += 1
+          studentCount[:combined][:"1100–1199"] += 1
         elsif scores[0]<1300
           satIncreases[:"1200–1299"].push(scoreIncrease)
           satPercentileIncreases[:"1200–1299"].push(percentileIncrease)
           combinedActAndSatIncreases[:"1200–1299"].push(scoreIncrease)
           combinedActAndSatPercentileIncreases[:"1200–1299"].push(percentileIncrease)
+          studentCount[:sat][:"1200–1299"] += 1
+          studentCount[:combined][:"1200–1299"] += 1
         elsif scores[0]<1400
           satIncreases[:"1300–1399"].push(scoreIncrease)
           satPercentileIncreases[:"1300–1399"].push(percentileIncrease)
           combinedActAndSatIncreases[:"1300–1399"].push(scoreIncrease)
           combinedActAndSatPercentileIncreases[:"1300–1399"].push(percentileIncrease)
+          studentCount[:sat][:"1300–1399"] += 1
+          studentCount[:combined][:"1300–1399"] += 1
         elsif scores[0]<1500
           satIncreases[:"1400–1499"].push(scoreIncrease)
           satPercentileIncreases[:"1400–1499"].push(percentileIncrease)
           combinedActAndSatIncreases[:"1400–1499"].push(scoreIncrease)
           combinedActAndSatPercentileIncreases[:"1400–1499"].push(percentileIncrease)
+          studentCount[:sat][:"1400–1499"] += 1
+          studentCount[:combined][:"1400–1499"] += 1
         else
           satIncreases[:"1500–1600"].push(scoreIncrease)
           satPercentileIncreases[:"1500–1600"].push(percentileIncrease)
           combinedActAndSatIncreases[:"1500–1600"].push(scoreIncrease)
           combinedActAndSatPercentileIncreases[:"1500–1600"].push(percentileIncrease)
+          studentCount[:sat][:"1500–1600"] += 1
+          studentCount[:combined][:"1500–1600"] += 1
         end
       end
     end
@@ -376,24 +427,38 @@ class Api::V1::TestsController < ApplicationController
         if scores[0]<20
           actIncreases[:"1–19"].push(scoreIncrease)
           actPercentileIncreases[:"1–19"].push(percentileIncrease)
+          studentCount[:act][:"1–19"] += 1
+          studentCount[:combined][:"400–999"] += 1
         elsif scores[0]<22
           actIncreases[:"20–21"].push(scoreIncrease)
           actPercentileIncreases[:"20–21"].push(percentileIncrease)
+          studentCount[:act][:"20–21"] += 1
+          studentCount[:combined][:"1000–1099"] += 1
         elsif scores[0]<25
           actIncreases[:"22–24"].push(scoreIncrease)
           actPercentileIncreases[:"22–24"].push(percentileIncrease)
+          studentCount[:act][:"22–24"] += 1
+          studentCount[:combined][:"1100–1199"] += 1
         elsif scores[0]<28
           actIncreases[:"25–27"].push(scoreIncrease)
           actPercentileIncreases[:"25–27"].push(percentileIncrease)
+          studentCount[:act][:"25–27"] += 1
+          studentCount[:combined][:"1200–1299"] += 1
         elsif scores[0]<30
           actIncreases[:"28–29"].push(scoreIncrease)
           actPercentileIncreases[:"28–29"].push(percentileIncrease)
+          studentCount[:act][:"28–29"] += 1
+          studentCount[:combined][:"1300–1399"] += 1
         elsif scores[0]<33
           actIncreases[:"30–32"].push(scoreIncrease)
           actPercentileIncreases[:"30–32"].push(percentileIncrease)
+          studentCount[:act][:"30–32"] += 1
+          studentCount[:combined][:"1400–1499"] += 1
         else
           actIncreases[:"33–36"].push(scoreIncrease)
           actPercentileIncreases[:"33–36"].push(percentileIncrease)
+          studentCount[:act][:"33–36"] += 1
+          studentCount[:combined][:"1500–1600"] += 1
         end
 
         # Now convert scores to SAT equivalent
@@ -409,36 +474,43 @@ class Api::V1::TestsController < ApplicationController
           actPercentileConvertedIncreases[:"400–999"].push(percentileIncrease)
           combinedActAndSatIncreases[:"400–999"].push(convertedScoreIncrease)
           combinedActAndSatPercentileIncreases[:"400–999"].push(percentileIncrease)
+          studentCount[:actConverted][:"400–999"] += 1
         elsif scores[0]<1100
           actConvertedIncreases[:"1000–1099"].push(convertedScoreIncrease)
           actPercentileConvertedIncreases[:"1000–1099"].push(percentileIncrease)
           combinedActAndSatIncreases[:"1000–1099"].push(convertedScoreIncrease)
           combinedActAndSatPercentileIncreases[:"1000–1099"].push(percentileIncrease)
+          studentCount[:actConverted][:"1000–1099"] += 1
         elsif scores[0]<1200
           actConvertedIncreases[:"1100–1199"].push(convertedScoreIncrease)
           actPercentileConvertedIncreases[:"1100–1199"].push(percentileIncrease)
           combinedActAndSatIncreases[:"1100–1199"].push(convertedScoreIncrease)
           combinedActAndSatPercentileIncreases[:"1100–1199"].push(percentileIncrease)
+          studentCount[:actConverted][:"1100–1199"] += 1
         elsif scores[0]<1300
           actConvertedIncreases[:"1200–1299"].push(convertedScoreIncrease)
           actPercentileConvertedIncreases[:"1200–1299"].push(percentileIncrease)
           combinedActAndSatIncreases[:"1200–1299"].push(convertedScoreIncrease)
           combinedActAndSatPercentileIncreases[:"1200–1299"].push(percentileIncrease)
+          studentCount[:actConverted][:"1200–1299"] += 1
         elsif scores[0]<1400
           actConvertedIncreases[:"1300–1399"].push(convertedScoreIncrease)
           actPercentileConvertedIncreases[:"1300–1399"].push(percentileIncrease)
           combinedActAndSatIncreases[:"1300–1399"].push(convertedScoreIncrease)
           combinedActAndSatPercentileIncreases[:"1300–1399"].push(percentileIncrease)
+          studentCount[:actConverted][:"1300–1399"] += 1
         elsif scores[0]<1500
           actConvertedIncreases[:"1400–1499"].push(convertedScoreIncrease)
           actPercentileConvertedIncreases[:"1400–1499"].push(percentileIncrease)
           combinedActAndSatIncreases[:"1400–1499"].push(convertedScoreIncrease)
           combinedActAndSatPercentileIncreases[:"1400–1499"].push(percentileIncrease)
+          studentCount[:actConverted][:"1400–1499"] += 1
         else
           actConvertedIncreases[:"1500–1600"].push(convertedScoreIncrease)
           actPercentileConvertedIncreases[:"1500–1600"].push(percentileIncrease)
           combinedActAndSatIncreases[:"1500–1600"].push(convertedScoreIncrease)
           combinedActAndSatPercentileIncreases[:"1500–1600"].push(percentileIncrease)
+          studentCount[:actConverted][:"1500–1600"] += 1
         end
       end
     end
@@ -487,7 +559,8 @@ class Api::V1::TestsController < ApplicationController
       convertedActScores: actConvertedIncreases,
       convertedActPercentiles: actPercentileConvertedIncreases,
       combinedScores: combinedActAndSatIncreases,
-      combinedPercentiles: combinedActAndSatPercentileIncreases
+      combinedPercentiles: combinedActAndSatPercentileIncreases,
+      studentCount: studentCount
     }
 
     render json: payload

@@ -9,6 +9,7 @@ class QueryPage extends Component {
     this.state = {
       test: false,
       percentile: false,
+      showStudentCount: false,
       satScores: [],
       satPercentiles: [],
       actScores: [],
@@ -16,11 +17,13 @@ class QueryPage extends Component {
       convertedactScores: [],
       convertedActPercentiles: [],
       combinedScores: [],
-      combinedPercentiles: []
+      combinedPercentiles: [],
+      studentCount: []
       // Use state to determine which query parameters have been checked.
     };
     this.changeTest=this.changeTest.bind(this);
     this.togglePercentile=this.togglePercentile.bind(this);
+    this.toggleStudentCount=this.toggleStudentCount.bind(this);
   }
 
   // Functions to track changes to query parameters
@@ -36,12 +39,21 @@ class QueryPage extends Component {
     }
   }
 
+  toggleStudentCount() {
+    if (this.state.showStudentCount == false) {
+      this.setState( { showStudentCount: true } );
+    } else {
+      this.setState( { showStudentCount: false } );
+    }
+  }
+
   graphData() {
     let data;
     let legend;
     let title;
     let yLabel;
     let xLabel = "Starting Score";
+    let studentCount;
 
     if (this.state.percentile == false && this.state.test) {
       title = "Average Score Increase of Students by Starting Score";
@@ -54,40 +66,49 @@ class QueryPage extends Component {
     if (this.state.test == "sat" && this.state.percentile == false) {
       data = [this.state.satScores];
       legend = ["SAT Score Increase"];
+      studentCount = [this.state.studentCount.sat];
     }
     else if (this.state.test == "sat" && this.state.percentile == true) {
       data = [this.state.satPercentiles];
       legend = ["SAT Percentile Increase"];
+      studentCount = [this.state.studentCount.sat];
     }
     else if (this.state.test == "act" && this.state.percentile == false) {
       data = [this.state.actScores];
       legend = ["ACT Score Increase"];
+      studentCount = [this.state.studentCount.act];
     }
     else if (this.state.test == "act" && this.state.percentile == true) {
       data = [this.state.actPercentiles];
       legend = ["ACT Percentile Increase"];
+      studentCount = [this.state.studentCount.act];
     }
     else if (this.state.test == "combined" && this.state.percentile == false) {
       data = [this.state.combinedScores];
       legend = ["Combined SAT and ACT Score Increase"];
+      studentCount = [this.state.studentCount.combined];
     }
     else if (this.state.test == "combined" && this.state.percentile == true) {
       data = [this.state.combinedPercentiles];
       legend = ["Combined SAT and ACT Percentile Increase"];
+      studentCount = [this.state.studentCount.combined];
     }
     else if (this.state.test == "compare" && this.state.percentile == false) {
       data = [this.state.satScores, this.state.convertedactScores];
       legend = ["SAT Score Increase", "ACT Score Increase (as SAT equivalent)"];
+      studentCount = [this.state.studentCount.sat, this.state.studentCount.actConverted];
     }
     else if (this.state.test == "compare" && this.state.percentile == true) {
       data = [this.state.satPercentiles, this.state.convertedActPercentiles];
       legend = ["SAT Percentile Increase", "ACT Percentile Increase (sorted by SAT equivalent)"];
+      studentCount = [this.state.studentCount.sat, this.state.studentCount.actConverted];
     }
     else {
       data = [[ ]];
       legend = [""];
+      studentCount = [];
     }
-    return {data: data, legend: legend, title: title, xLabel: xLabel, yLabel: yLabel};
+    return {data: data, legend: legend, title: title, xLabel: xLabel, yLabel: yLabel, studentCount: studentCount};
   }
 
   assignXAndY(scores) {
@@ -120,7 +141,8 @@ class QueryPage extends Component {
         convertedactScores: this.assignXAndY(body.convertedActScores),
         convertedActPercentiles: this.assignXAndY(body.convertedActPercentiles),
         combinedScores: this.assignXAndY(body.combinedScores),
-        combinedPercentiles: this.assignXAndY(body.combinedPercentiles)
+        combinedPercentiles: this.assignXAndY(body.combinedPercentiles),
+        studentCount: body.studentCount
         }
       );
     })
@@ -130,13 +152,22 @@ class QueryPage extends Component {
   render() {
     return(
       <div>
-        <h2 className="main-header">Query</h2>
+        <h2 className="main-header" >Query</h2>
         <div className="grid-x data-container">
           <div className="cell medium-6 large-4 query-params">
-            <QueryParams changeTest={this.changeTest} togglePercentile={this.togglePercentile}/>
+            <QueryParams
+            changeTest={this.changeTest}
+            togglePercentile={this.togglePercentile}
+            toggleStudentCount={this.toggleStudentCount}/>
           </div>
           <div className="cell medium-6 large-8 query-display">
-            <BarGraph data={this.graphData()}/>
+            <BarGraph
+            data={this.graphData()}
+            showStudentCount={this.state.showStudentCount}
+            mouseOver={this.mouseOver}
+            displayValue={this.state.displayValue}
+            changeDisplayValue={this.changeDisplayValue}
+            />
           </div>
         </div>
       </div>

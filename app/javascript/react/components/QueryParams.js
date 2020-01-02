@@ -24,15 +24,15 @@ const QueryParams = (props) => {
       </div>
       <div className="cell small-3">
         <div className="switch">
-          <input className="switch-input" id="doSomethingSwitch" type="checkbox" name="doSomethingSwitch" />
-          <label className="switch-paddle" htmlFor="doSomethingSwitch">
+          <input onChange={props.toggleStudentCount} className="switch-input" id="showStudentCount" type="checkbox" name="showStudentCount" />
+          <label className="switch-paddle" htmlFor="showStudentCount">
             <span className="switch-active" aria-hidden="true">On</span>
             <span className="switch-inactive" aria-hidden="true">Off</span>
           </label>
         </div>
       </div>
       <div className="cell small-9">
-        <p>Do something else</p>
+        <p>Show Student Count</p>
       </div>
       <div className="cell small-3">
         <div className="switch">
