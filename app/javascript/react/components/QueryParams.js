@@ -2,6 +2,7 @@ import React from 'react';
 
 
 const QueryParams = (props) => {
+  
   return(
     <form className="grid-x query-params-list">
       <div className="row small-12">
@@ -24,27 +25,27 @@ const QueryParams = (props) => {
       </div>
       <div className="cell small-3">
         <div className="switch">
-          <input className="switch-input" id="doSomethingSwitch" type="checkbox" name="doSomethingSwitch" />
-          <label className="switch-paddle" htmlFor="doSomethingSwitch">
+          <input onChange={props.toggleStudentCount} className="switch-input" id="showStudentCount" type="checkbox" name="showStudentCount" />
+          <label className="switch-paddle" htmlFor="showStudentCount">
             <span className="switch-active" aria-hidden="true">On</span>
             <span className="switch-inactive" aria-hidden="true">Off</span>
           </label>
         </div>
       </div>
       <div className="cell small-9">
-        <p>Do something else</p>
+        <p>Show Student Count</p>
       </div>
       <div className="cell small-3">
         <div className="switch">
-          <input className="switch-input" id="cakeSwitch" type="checkbox" name="cakeSwitch" />
-          <label className="switch-paddle" htmlFor="cakeSwitch">
+          <input className="switch-input" id="subdivideBySection" type="checkbox" name="subdivideBySection" />
+          <label className="switch-paddle" htmlFor="subdivideBySection">
             <span className="switch-active" aria-hidden="true">On</span>
             <span className="switch-inactive" aria-hidden="true">Off</span>
           </label>
         </div>
       </div>
       <div className="cell small-9">
-        <p>Bake cake</p>
+        <p>Subdivide by Section</p>
       </div>
     </form>
   );
