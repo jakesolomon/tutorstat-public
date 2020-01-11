@@ -8,13 +8,36 @@ class Api::V1::TestsController < ApplicationController
 # API controllers that repeat a lot.
 
   def index
+
+    # TODO: I cant just input satScores[sat.student_name.composite] = [sat.total]
+    # because sat.student_name is undefined, so theres no .composite method for
+    # it. So, to populate a hash like so:
+    # {
+    #   "student_name": {
+    #                     composite:
+    #                     math:
+    #                     english:
+    #                     blah:
+    #                     blah:
+    #                   }
+    # }
+    # I'll have to define a custom class called "Student" with those methods,
+    # and then populate satScores with Students.
+
     sats = SAT.all
     satScores = {}
     sats.each do |sat|
       if !satScores.has_key? sat.student_name
-        satScores[sat.student_name]=[sat.total]
+        satScores[sat.student_name]={
+          composite: [sat.total],
+          reading_writing: [sat.reading_writing],
+          math: [sat.math]
+        }
+
       else
-        satScores[sat.student_name].push(sat.total)
+        satScores[sat.student_name][:composite].push(sat.total)
+        satScores[sat.student_name][:reading_writing].push(sat.reading_writing)
+        satScores[sat.student_name][:math].push(sat.math)
       end
     end
 
@@ -27,6 +50,9 @@ class Api::V1::TestsController < ApplicationController
         actScores[act.student_name].push(act.composite)
       end
     end
+
+
+# TODO: take conversion tables out into separate files and include where necessary.
 
     # This table is taken from:
     # https://www.princetonreview.com/college-advice/act-to-sat-conversion
@@ -197,10 +223,10 @@ class Api::V1::TestsController < ApplicationController
       29 => 91,
       28 => 88,
       27 => 85,
-      26 =>82,
-      25 =>78,
-      24 =>74,
-      23 =>69,
+      26 => 82,
+      25 => 78,
+      24 => 74,
+      23 => 69,
       22 => 64,
       21 => 58,
       20 => 52,
@@ -233,7 +259,7 @@ class Api::V1::TestsController < ApplicationController
       end
     end
 
-    satIncreases = {
+    satCompositeIncreases = {
       "400–999": [],
       "1000–1099": [],
       "1100–1199": [],
@@ -251,6 +277,26 @@ class Api::V1::TestsController < ApplicationController
       "1300–1399": [],
       "1400–1499": [],
       "1500–1600": []
+    }
+
+    satMathIncreases = {
+      "200–499": [],
+      "500–549": [],
+      "550–599": [],
+      "600–649": [],
+      "650–699": [],
+      "700–749": [],
+      "750–800": []
+    }
+
+    satReadingWritingIncreases = {
+      "200–499": [],
+      "500–549": [],
+      "550–599": [],
+      "600–649": [],
+      "650–699": [],
+      "700–749": [],
+      "750–800": []
     }
 
     actIncreases = {
@@ -323,6 +369,24 @@ class Api::V1::TestsController < ApplicationController
         "1400–1499": 0,
         "1500–1600": 0
       },
+      satMath: {
+        "200–499": 0,
+        "500–549": 0,
+        "550–599": 0,
+        "600–649": 0,
+        "650–699": 0,
+        "700–749": 0,
+        "750–800": 0
+      },
+      satReadingWriting: {
+        "200–499": 0,
+        "500–549": 0,
+        "550–599": 0,
+        "600–649": 0,
+        "650–699": 0,
+        "700–749": 0,
+        "750–800": 0
+      },
       act: {
         "1–19": 0,
         "20–21": 0,
@@ -352,69 +416,144 @@ class Api::V1::TestsController < ApplicationController
       }
     }
 
-    # Populates satIncreases, satPercentileIncreases, combinedActAndSatIncreases, and combinedActAndSatPercentileIncreases
+
+# TODO: ALl of the below logic in satScores.each and satScores.each can be
+# pulled out as a single function. Arguments are: score ranges as an array,
+# starting score, scoreIncrease, percentileIncrease, and separate arrays for each hash that
+# needs to be increased by scoreIncrease, percentileIncrease, or incrementally.
+# Function can be called populateDataHashes.
+
     satScores.each do |student, scores|
       # filter out students that only have one score listed
-      if scores[1]
+      if scores[:composite][1]
 
-        scoreIncrease = scores.max-scores[0]
-        percentileIncrease = getPercentile(scores.max, satPercentile) - getPercentile(scores[0], satPercentile)
+        compositeIncrease = scores[:composite].max-scores[:composite][0]
+        percentileIncrease = getPercentile(scores[:composite].max, satPercentile) - getPercentile(scores[:composite][0], satPercentile)
 
-        # sort max score differences into buckets
-        if scores[0]<1000
-          satIncreases[:"400–999"].push(scoreIncrease)
+        # Populates satCompositeIncreases, satPercentileIncreases,
+        # combinedActAndSatIncreases, and combinedActAndSatPercentileIncreases
+        if scores[:composite][0]<1000
+          satCompositeIncreases[:"400–999"].push(compositeIncrease)
           satPercentileIncreases[:"400–999"].push(percentileIncrease)
-          combinedActAndSatIncreases[:"400–999"].push(scoreIncrease)
+          combinedActAndSatIncreases[:"400–999"].push(compositeIncrease)
           combinedActAndSatPercentileIncreases[:"400–999"].push(percentileIncrease)
           studentCount[:sat][:"400–999"] += 1
           studentCount[:combined][:"400–999"] += 1
-        elsif scores[0]<1100
-          satIncreases[:"1000–1099"].push(scoreIncrease)
+        elsif scores[:composite][0]<1100
+          satCompositeIncreases[:"1000–1099"].push(compositeIncrease)
           satPercentileIncreases[:"1000–1099"].push(percentileIncrease)
-          combinedActAndSatIncreases[:"1000–1099"].push(scoreIncrease)
+          combinedActAndSatIncreases[:"1000–1099"].push(compositeIncrease)
           combinedActAndSatPercentileIncreases[:"1000–1099"].push(percentileIncrease)
           studentCount[:sat][:"1000–1099"] += 1
           studentCount[:combined][:"1000–1099"] += 1
-        elsif scores[0]<1200
-          satIncreases[:"1100–1199"].push(scoreIncrease)
+        elsif scores[:composite][0]<1200
+          satCompositeIncreases[:"1100–1199"].push(compositeIncrease)
           satPercentileIncreases[:"1100–1199"].push(percentileIncrease)
-          combinedActAndSatIncreases[:"1100–1199"].push(scoreIncrease)
+          combinedActAndSatIncreases[:"1100–1199"].push(compositeIncrease)
           combinedActAndSatPercentileIncreases[:"1100–1199"].push(percentileIncrease)
           studentCount[:sat][:"1100–1199"] += 1
           studentCount[:combined][:"1100–1199"] += 1
-        elsif scores[0]<1300
-          satIncreases[:"1200–1299"].push(scoreIncrease)
+        elsif scores[:composite][0]<1300
+          satCompositeIncreases[:"1200–1299"].push(compositeIncrease)
           satPercentileIncreases[:"1200–1299"].push(percentileIncrease)
-          combinedActAndSatIncreases[:"1200–1299"].push(scoreIncrease)
+          combinedActAndSatIncreases[:"1200–1299"].push(compositeIncrease)
           combinedActAndSatPercentileIncreases[:"1200–1299"].push(percentileIncrease)
           studentCount[:sat][:"1200–1299"] += 1
           studentCount[:combined][:"1200–1299"] += 1
-        elsif scores[0]<1400
-          satIncreases[:"1300–1399"].push(scoreIncrease)
+        elsif scores[:composite][0]<1400
+          satCompositeIncreases[:"1300–1399"].push(compositeIncrease)
           satPercentileIncreases[:"1300–1399"].push(percentileIncrease)
-          combinedActAndSatIncreases[:"1300–1399"].push(scoreIncrease)
+          combinedActAndSatIncreases[:"1300–1399"].push(compositeIncrease)
           combinedActAndSatPercentileIncreases[:"1300–1399"].push(percentileIncrease)
           studentCount[:sat][:"1300–1399"] += 1
           studentCount[:combined][:"1300–1399"] += 1
-        elsif scores[0]<1500
-          satIncreases[:"1400–1499"].push(scoreIncrease)
+        elsif scores[:composite][0]<1500
+          satCompositeIncreases[:"1400–1499"].push(compositeIncrease)
           satPercentileIncreases[:"1400–1499"].push(percentileIncrease)
-          combinedActAndSatIncreases[:"1400–1499"].push(scoreIncrease)
+          combinedActAndSatIncreases[:"1400–1499"].push(compositeIncrease)
           combinedActAndSatPercentileIncreases[:"1400–1499"].push(percentileIncrease)
           studentCount[:sat][:"1400–1499"] += 1
           studentCount[:combined][:"1400–1499"] += 1
         else
-          satIncreases[:"1500–1600"].push(scoreIncrease)
+          satCompositeIncreases[:"1500–1600"].push(compositeIncrease)
           satPercentileIncreases[:"1500–1600"].push(percentileIncrease)
-          combinedActAndSatIncreases[:"1500–1600"].push(scoreIncrease)
+          combinedActAndSatIncreases[:"1500–1600"].push(compositeIncrease)
           combinedActAndSatPercentileIncreases[:"1500–1600"].push(percentileIncrease)
           studentCount[:sat][:"1500–1600"] += 1
           studentCount[:combined][:"1500–1600"] += 1
         end
       end
+
+      # filter out students that:
+      # - have no starting score listed
+      # - only have one score listed
+      # - raw scores listed
+      if (scores[:math][0] && scores[:math][1] && scores[:math].min>199)
+
+        mathIncrease = scores[:math].max-scores[:math][0]
+
+        # Populates satMathIncreases
+        if scores[:math][0]<500
+          satMathIncreases[:"200–499"].push(mathIncrease)
+          studentCount[:satMath][:"200–499"] += 1
+        elsif scores[:math][0]<550
+          satMathIncreases[:"500–549"].push(mathIncrease)
+          studentCount[:satMath][:"500–549"] += 1
+        elsif scores[:math][0]<600
+          satMathIncreases[:"550–599"].push(mathIncrease)
+          studentCount[:satMath][:"550–599"] += 1
+        elsif scores[:math][0]<650
+          satMathIncreases[:"600–649"].push(mathIncrease)
+          studentCount[:satMath][:"600–649"] += 1
+        elsif scores[:math][0]<700
+          satMathIncreases[:"650–699"].push(mathIncrease)
+          studentCount[:satMath][:"650–699"] += 1
+        elsif scores[:math][0]<750
+          satMathIncreases[:"700–749"].push(mathIncrease)
+          studentCount[:satMath][:"700–749"] += 1
+        else
+          satMathIncreases[:"750–800"].push(mathIncrease)
+          studentCount[:satMath][:"750–800"] += 1
+        end
+      end
+
+      # filter out students that:
+      # - have no starting score listed
+      # - only have one score listed
+      # - raw scores listed
+      if (scores[:reading_writing][0] && scores[:reading_writing][1] && scores[:reading_writing].min>199)
+
+        readingWritingIncrease = scores[:reading_writing].max-scores[:reading_writing][0]
+
+        # Populates satReadingWritingIncreases
+        if scores[:reading_writing][0]<500
+          satReadingWritingIncreases[:"200–499"].push(readingWritingIncrease)
+          studentCount[:satReadingWriting][:"200–499"] += 1
+        elsif scores[:reading_writing][0]<550
+          satReadingWritingIncreases[:"500–549"].push(readingWritingIncrease)
+          studentCount[:satReadingWriting][:"500–549"] += 1
+        elsif scores[:reading_writing][0]<600
+          satReadingWritingIncreases[:"550–599"].push(readingWritingIncrease)
+          studentCount[:satReadingWriting][:"550–599"] += 1
+        elsif scores[:reading_writing][0]<650
+          satReadingWritingIncreases[:"600–649"].push(readingWritingIncrease)
+          studentCount[:satReadingWriting][:"600–649"] += 1
+        elsif scores[:reading_writing][0]<700
+          satReadingWritingIncreases[:"650–699"].push(readingWritingIncrease)
+          studentCount[:satReadingWriting][:"650–699"] += 1
+        elsif scores[:reading_writing][0]<750
+          satReadingWritingIncreases[:"700–749"].push(readingWritingIncrease)
+          studentCount[:satReadingWriting][:"700–749"] += 1
+        else
+          satReadingWritingIncreases[:"750–800"].push(readingWritingIncrease)
+          studentCount[:satReadingWriting][:"750–800"] += 1
+        end
+      end
+
+
     end
 
-    # Populates actIncreases, actPercentileIncreases, and actConvertedIncreases,
+    # Populates actIncreases, actPercentileIncreases, actConvertedIncreases,
     # actPercentileIncreases, combinedActAndSatIncreases, and combinedActAndSatPercentileIncreases.
     actScores.each do |student, scores|
       # filter out students that only have one score listed
@@ -515,16 +654,27 @@ class Api::V1::TestsController < ApplicationController
       end
     end
 
+# TODO: Can pull out the averaging logic below as a single function. Arguments
+# would be: hash to average values in, and digits to round to.
+
     def averageScores(scores)
       return scores.inject{ | sum, el| sum + el }.to_f / scores.size
     end
 
-    satIncreases.each { |range, scores|
-      satIncreases[range] = averageScores(scores).round(0)
+    satCompositeIncreases.each { |range, scores|
+      satCompositeIncreases[range] = averageScores(scores).round(0)
     }
 
     satPercentileIncreases.each { |range, scores|
       satPercentileIncreases[range] = averageScores(scores).round(1)
+    }
+
+    satMathIncreases.each { |range, scores|
+      satMathIncreases[range] = averageScores(scores).round(0)
+    }
+
+    satReadingWritingIncreases.each { |range, scores|
+      satReadingWritingIncreases[range] = averageScores(scores).round(0)
     }
 
     actIncreases.each { |range, scores|
@@ -552,8 +702,10 @@ class Api::V1::TestsController < ApplicationController
     }
 
     payload = {
-      satScores: satIncreases,
+      satComposite: satCompositeIncreases,
       satPercentiles: satPercentileIncreases,
+      satMath: satMathIncreases,
+      satReadingWriting: satReadingWritingIncreases,
       actScores: actIncreases,
       actPercentiles: actPercentileIncreases,
       convertedActScores: actConvertedIncreases,

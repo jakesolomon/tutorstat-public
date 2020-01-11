@@ -10,7 +10,10 @@ class QueryPage extends Component {
       test: false,
       percentile: false,
       showStudentCount: false,
-      satScores: [],
+      subdivideBySection: false,
+      satComposite: [],
+      satMath: [],
+      satReadingWriting: [],
       satPercentiles: [],
       actScores: [],
       actPercentiles: [],
@@ -24,6 +27,7 @@ class QueryPage extends Component {
     this.changeTest=this.changeTest.bind(this);
     this.togglePercentile=this.togglePercentile.bind(this);
     this.toggleStudentCount=this.toggleStudentCount.bind(this);
+    this.toggleSubdivideBySection=this.toggleSubdivideBySection.bind(this);
   }
 
   // Functions to track changes to query parameters
@@ -33,7 +37,7 @@ class QueryPage extends Component {
 
   togglePercentile() {
     if (this.state.percentile == false) {
-      this.setState( { percentile: true } );
+      this.setState( { percentile: true, subdivideBySection: false } );
     } else {
       this.setState( { percentile: false } );
     }
@@ -44,6 +48,17 @@ class QueryPage extends Component {
       this.setState( { showStudentCount: true } );
     } else {
       this.setState( { showStudentCount: false } );
+    }
+  }
+
+  toggleSubdivideBySection() {
+    if (this.state.subdivideBySection == false) {
+      this.setState( { subdivideBySection: true } );
+      if (this.state.test == "combined" || this.state.test == "compare") {
+        this.setState( { test: false } );
+      }
+    } else {
+      this.setState( { subdivideBySection: false } );
     }
   }
 
@@ -63,10 +78,15 @@ class QueryPage extends Component {
       yLabel = "Percentile increase";
     }
 
-    if (this.state.test == "sat" && this.state.percentile == false) {
-      data = [this.state.satScores];
+    if (this.state.test == "sat" && this.state.percentile == false && this.state.subdivideBySection == false) {
+      data = [this.state.satComposite];
       legend = ["SAT Score Increase"];
       studentCount = [this.state.studentCount.sat];
+    }
+    else if (this.state.test == "sat" && this.state.percentile == false && this.state.subdivideBySection == true) {
+      data = [this.state.satReadingWriting, this.state.satMath];
+      legend = ["Evidence-Based Reading and Writing", "Math"];
+      studentCount = [this.state.studentCount.satReadingWriting, this.state.studentCount.satMath];
     }
     else if (this.state.test == "sat" && this.state.percentile == true) {
       data = [this.state.satPercentiles];
@@ -94,7 +114,7 @@ class QueryPage extends Component {
       studentCount = [this.state.studentCount.combined];
     }
     else if (this.state.test == "compare" && this.state.percentile == false) {
-      data = [this.state.satScores, this.state.convertedactScores];
+      data = [this.state.satComposite, this.state.convertedactScores];
       legend = ["SAT Score Increase", "ACT Score Increase (as SAT equivalent)"];
       studentCount = [this.state.studentCount.sat, this.state.studentCount.actConverted];
     }
@@ -134,7 +154,9 @@ class QueryPage extends Component {
     .then(response => response.json())
     .then(body => {
       this.setState( {
-        satScores: this.assignXAndY(body.satScores),
+        satComposite: this.assignXAndY(body.satComposite),
+        satMath: this.assignXAndY(body.satMath),
+        satReadingWriting: this.assignXAndY(body.satReadingWriting),
         satPercentiles: this.assignXAndY(body.satPercentiles),
         actScores: this.assignXAndY(body.actScores),
         actPercentiles: this.assignXAndY(body.actPercentiles),
@@ -158,7 +180,19 @@ class QueryPage extends Component {
             <QueryParams
             changeTest={this.changeTest}
             togglePercentile={this.togglePercentile}
-            toggleStudentCount={this.toggleStudentCount}/>
+            percentileOn={this.state.percentile}
+            toggleStudentCount={this.toggleStudentCount}
+            studentCountOn={this.state.showStudentCount}
+            toggleSubdivideBySection={this.toggleSubdivideBySection}
+            subdivideBySectionOn={this.state.subdivideBySection}
+            muteCombined={this.state.subdivideBySection}
+            mutePercentile={this.state.subdivideBySection}
+            muteSubdivideBySection={(
+              this.state.test == "combined" ||
+              this.state.test == "compare" ||
+              this.state.test == "act" ||
+              this.state.percentile == true)}
+            />
           </div>
           <div className="cell medium-6 large-8 query-display">
             <BarGraph
