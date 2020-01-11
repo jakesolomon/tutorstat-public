@@ -65,3 +65,7 @@
 .disappear {
   visibility: hidden;
 }
+
+.disabled {
+  color: #888888;
+}
