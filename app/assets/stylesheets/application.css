@@ -16,20 +16,33 @@
 
  */
 
+body {
+  background-color: #EEEEEE;
+}
+
+a {
+  color: #FFFFFF;
+  font-size: 1.1em;
+}
+
+.top-bar {
+  background-color: #228e46;
+}
+
 .logo {
   padding-right: 15px;
 }
 
 .topbar-center {
- padding: 35px 15px;
+ padding: 35px 20px;
 }
 
 .body {
   margin-left: 100px;
-  margin-top: 20px;
+  margin-top: 0px;
   margin-right: 100px;
   background-color: #EEEEEE;
-  padding: 20px 35px;
+  padding: 30px 35px;
 }
 
 .tutor-list {
@@ -42,7 +55,8 @@
 }
 
 .data-container {
-
+  padding-top: 20px;
+  height: 55vh;
 }
 
 .query-params-list {
@@ -67,5 +81,5 @@
 }
 
 .disabled {
-  color: #888888;
+  color: #909090;
 }

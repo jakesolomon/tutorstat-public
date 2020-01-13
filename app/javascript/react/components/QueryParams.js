@@ -93,11 +93,11 @@ const QueryParams = (props) => {
       <div className="cell small-3">
         <div className="switch">
           {subdivideInput}
-        <label className="switch-paddle" htmlFor="subdivideBySection">
-          <span className="switch-active" aria-hidden="true">On</span>
-          <span className="switch-inactive" aria-hidden="true">Off</span>
-        </label>
-      </div>
+          <label className="switch-paddle" htmlFor="subdivideBySection">
+            <span className="switch-active" aria-hidden="true">On</span>
+            <span className="switch-inactive" aria-hidden="true">Off</span>
+          </label>
+        </div>
       </div>
       <div className={subdivideLabel}>
         <p>Subdivide by Section</p>
