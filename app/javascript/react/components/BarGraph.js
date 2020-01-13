@@ -36,8 +36,8 @@ class BarGraph extends Component {
     const hoveredNode = this.state;
 
     let seriesColors = [
-      "00EE00",
-      "EE0000"
+      "228e46",
+      "f68b2b"
     ];
 
     let barSeries = this.props.data.data.map(data => {
@@ -103,7 +103,7 @@ class BarGraph extends Component {
       <XAxis
       animation={false}
       tickSize={0}
-      style={{ text: {fontSize: 14} }}
+      style={{ line: {stroke:"none"}, text: {fontSize: 14} }}
       />
       <XAxis
       title={this.props.data.xLabel}
@@ -121,7 +121,7 @@ class BarGraph extends Component {
       className={visibility}
       />
       <YAxis
-      style={{ text: {fontSize: 14} }}
+      style={{ line: {stroke:"none"}, text: {fontSize: 14} }}
       />
       <YAxis
       title={this.props.data.yLabel}
