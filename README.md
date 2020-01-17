@@ -1,25 +1,21 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Tutorstat is built with Ruby 2.6.4p104 (2019-08-28 revision 67798) [x86_64-darwin18] and Rails 5.2.3 database is built using PostgreSQL 11.
 
-Things you may want to cover:
+To initialize database, run:
 
-* Ruby version
+rake db:create
+rake db:migrate
+rake db:seed
 
-* System dependencies
+Javascript dependencies are managed using Yarn (I'm using version 1.17.3), static assets are created with Webpacker 3.3, javascript is compiled using Babel 5.8.35.
 
-* Configuration
+To compile assets, run:
 
-* Database creation
+yarn run start
 
-* Database initialization
+To boot localhost server with Puma 3.11, run:
 
-* How to run the test suite
+bundle exec rails s
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
 # tutorstat

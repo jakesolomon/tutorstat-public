@@ -17,8 +17,7 @@ ActiveRecord::Schema.define(version: 2019_12_08_211605) do
 
   create_table "acts", force: :cascade do |t|
     t.datetime "date_entered", null: false
-    t.string "student_name", null: false
-    t.integer "student_id"
+    t.integer "student_id", null: false
     t.string "tutor_name"
     t.integer "tutor_id"
     t.string "form"
@@ -32,8 +31,7 @@ ActiveRecord::Schema.define(version: 2019_12_08_211605) do
 
   create_table "sats", force: :cascade do |t|
     t.datetime "date_entered", null: false
-    t.string "student_name", null: false
-    t.integer "student_id"
+    t.integer "student_id", null: false
     t.string "tutor_name"
     t.integer "tutor_id"
     t.string "form"
