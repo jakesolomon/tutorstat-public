@@ -2,6 +2,10 @@
 
 Tutorstat is built with Ruby 2.6.4p104 (2019-08-28 revision 67798) [x86_64-darwin18] and Rails 5.2.3 database is built using PostgreSQL 11.
 
+To install dependencies, run:
+
+yarn install
+
 To initialize database, run:
 
 rake db:create
