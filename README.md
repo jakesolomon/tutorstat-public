@@ -17,7 +17,7 @@ To compile assets, run:
 
 yarn run start
 
-To boot localhost server with Puma 3.11, run:
+To boot localhost server with Puma 3.12, run:
 
 bundle exec rails s
 
