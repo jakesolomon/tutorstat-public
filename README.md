@@ -4,6 +4,7 @@ Tutorstat is built with Ruby 2.6.4p104 (2019-08-28 revision 67798) [x86_64-darwi
 
 To initialize database, run:
 
+rake db:create
 rake db:migrate
 rake db:seed
 

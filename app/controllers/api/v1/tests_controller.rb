@@ -9,45 +9,30 @@ class Api::V1::TestsController < ApplicationController
 
   def index
 
-    # TODO: I cant just input satScores[sat.student_name.composite] = [sat.total]
-    # because sat.student_name is undefined, so theres no .composite method for
-    # it. So, to populate a hash like so:
-    # {
-    #   "student_name": {
-    #                     composite:
-    #                     math:
-    #                     english:
-    #                     blah:
-    #                     blah:
-    #                   }
-    # }
-    # I'll have to define a custom class called "Student" with those methods,
-    # and then populate satScores with Students.
-
     sats = SAT.all
     satScores = {}
     sats.each do |sat|
-      if !satScores.has_key? sat.student_name
-        satScores[sat.student_name]={
+      if !satScores.has_key? sat.student_id
+        satScores[sat.student_id]={
           composite: [sat.total],
           reading_writing: [sat.reading_writing],
           math: [sat.math]
         }
 
       else
-        satScores[sat.student_name][:composite].push(sat.total)
-        satScores[sat.student_name][:reading_writing].push(sat.reading_writing)
-        satScores[sat.student_name][:math].push(sat.math)
+        satScores[sat.student_id][:composite].push(sat.total)
+        satScores[sat.student_id][:reading_writing].push(sat.reading_writing)
+        satScores[sat.student_id][:math].push(sat.math)
       end
     end
 
     acts = ACT.all
     actScores = {}
     acts.each do |act|
-      if !actScores.has_key? act.student_name
-        actScores[act.student_name]=[act.composite]
+      if !actScores.has_key? act.student_id
+        actScores[act.student_id]=[act.composite]
       else
-        actScores[act.student_name].push(act.composite)
+        actScores[act.student_id].push(act.composite)
       end
     end
 
