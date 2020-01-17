@@ -4,9 +4,12 @@ Tutorstat is built with Ruby 2.6.4p104 (2019-08-28 revision 67798) [x86_64-darwi
 
 To initialize database, run:
 
-rake db:create \n
-rake db:migrate \n
-rake db:seed \n
+rake db:create
+
+rake db:migrate
+
+rake db:seed
+
 
 Javascript dependencies are managed using Yarn (I'm using version 1.17.3), static assets are created with Webpacker 3.3, javascript is compiled using Babel 5.8.35.
 
